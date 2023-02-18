@@ -2,6 +2,9 @@ import json
 
 from typing import Dict, Set
 from dataclasses import dataclass
+
+import ipdb
+
 from file_getter import github_get_file
 
 
@@ -50,23 +53,21 @@ class SnykResultInterpreter:
         return file_paths
 
     def _code_location_to_code(self, code_file_content: str, location: CodeLocation) -> str:
-        code_lines = code_file_content.splitlines()[location.start_line+1:location.end_line+2]
+        code_lines = code_file_content.splitlines()[location.start_line-1:location.end_line+1]
         if not code_lines:
             return ''
 
-        code_lines[0] = code_lines[0][location.start_column:]
-        code_lines[-1] = code_lines[-1][:location.end_column+2]
+        code_lines[-1] = code_lines[-1][:location.end_column+1]
+        code_lines[0] = code_lines[0][location.start_column-1:]
         return '\n'.join(code_lines)
 
     def _validate_code_location(self, location: CodeLocation, code: str) -> bool:
-        if code is None:
-            return False
-        return True
+        pass
 
     def is_result_of_commit(self, commit_id):
         for code_location in self.code_locations:
             code_file_content = github_get_file(self.repo_url, code_location.uri, commit_id)
             code = self._code_location_to_code(code_file_content, code_location)
-            if not self._validate_code_location(code_location, code):
+            if not code:
                 return False
         return True
