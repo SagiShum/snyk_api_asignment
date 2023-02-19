@@ -108,7 +108,5 @@ class SnykResultInterpreter:
             code_file_content = github_get_file(self.repo_url, code_location.uri, commit_id)
             code = self._code_location_to_code(code_file_content, code_location)
             if not is_code_valid(code):
-                print(code)
-                print(code_location)
                 return False
         return True
