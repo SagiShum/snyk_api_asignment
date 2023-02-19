@@ -1,7 +1,7 @@
 from .snyk_result_interpreter import SnykResultInterpreter
 
 
-def is_snyk_output_of_commit(repo_url: str, snyk_output_file_path: str, commit_id: str) -> bool:
+def is_snyk_output_of_commit(repo_url: str, commit_id: str, snyk_output_file_path: str) -> bool:
     """
     Macro function that returns whether a snyk output matches the repo's code in commit_id
     :param repo_url: Github repo URL leading with https://gibhub.com

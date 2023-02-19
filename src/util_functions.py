@@ -1,3 +1,5 @@
+from time import sleep
+
 import github
 from functools import lru_cache
 
@@ -8,6 +10,7 @@ GITHUB_API = github.Github()
 
 @lru_cache
 def github_get_file(repo_url: str, file_path: str, commit_id=None) -> str:
+    sleep(2)  # github api blocks requests if too frequent
     commit_id = commit_id or github.GithubObject.NotSet
     repo = GITHUB_API.get_repo(repo_url.lstrip(GIT_BASE_URL))
     try:
@@ -21,8 +24,8 @@ def github_get_file(repo_url: str, file_path: str, commit_id=None) -> str:
 
 
 def is_balanced_parentheses(expression):
-    parentheses_openers = ['(', '{', '[']
-    parentheses_closers = [')', '}', ']']
+    parentheses_openers = ['(', '[']
+    parentheses_closers = [')', ']']
     count = 0
     for char in expression:
         if char in parentheses_openers:
