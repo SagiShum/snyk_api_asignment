@@ -12,23 +12,29 @@ def github_get_file(repo_url: str, file_path: str, commit_id=None) -> str:
     repo = GITHUB_API.get_repo(repo_url.lstrip(GIT_BASE_URL))
     try:
         return repo.get_contents(file_path, commit_id).decoded_content.decode()  # get contents returns bytes not str
-    except AssertionError as error:
+    except AssertionError as assertion_error:
         return ''
+    except github.GithubException as github_exception:
+        if github_exception.args[0] == 404:
+            return ''
+        raise
 
 
-def is_balanced_parentheses(text):
+def is_balanced_parentheses(expression):
+    parentheses_openers = ['(', '{', '[']
+    parentheses_closers = [')', '}', ']']
     count = 0
-    for char in text:
-        if char == "(" or char == "{" or char == "[":
+    for char in expression:
+        if char in parentheses_openers:
             count += 1
-        elif char == ")" or char == "}" or char == "]":
+        elif char in parentheses_closers:
             count -= 1
         if count < 0:
             return False
     return count == 0
 
 
-def _validate_code(code: str) -> bool:
+def is_code_valid(code: str) -> bool:
     """
     Runs simple code heuristics to validate marked code makes sense
     :param code:

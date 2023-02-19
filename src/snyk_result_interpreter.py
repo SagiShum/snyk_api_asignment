@@ -2,7 +2,7 @@ import json
 
 from typing import Dict, Set
 from dataclasses import dataclass
-from util_functions import github_get_file, _validate_code
+from util_functions import github_get_file, is_code_valid
 
 
 @dataclass(eq=True, frozen=True)
@@ -76,6 +76,6 @@ class SnykResultInterpreter:
         for code_location in self.code_locations:
             code_file_content = github_get_file(self.repo_url, code_location.uri, commit_id)
             code = self._code_location_to_code(code_file_content, code_location)
-            if not _validate_code(code):
+            if not is_code_valid(code):
                 return False
         return True
