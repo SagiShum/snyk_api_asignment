@@ -2,7 +2,7 @@ import json
 
 from typing import Dict, Set
 from dataclasses import dataclass
-from util_functions import github_get_file, is_code_valid
+from .util_functions import github_get_file, is_code_valid
 
 
 @dataclass(eq=True, frozen=True)

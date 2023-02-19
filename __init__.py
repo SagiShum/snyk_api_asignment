@@ -1,0 +1,1 @@
+from .src.macro_functions import is_snyk_output_of_commit
