@@ -16,13 +16,13 @@ def rate_limiter(min_interval: Real):
     :param min_interval: seconds between function runs
     """
     def decorate(func):
-        last_run_time = [time.time()]  # in a list to pass to inner function by reference and not value
+        last_run_time = [time.perf_counter()]  # in a list to pass to inner function by reference and not value
 
         def rate_limited_function(*args, **kargs):
-            left_to_wait = last_run_time[0] + min_interval - time.time()
+            left_to_wait = last_run_time[0] + min_interval - time.perf_counter()
             time.sleep(max(0., left_to_wait))
             ret = func(*args, **kargs)
-            last_run_time[0] = time.time()
+            last_run_time[0] = time.perf_counter()
             return ret
 
         return rate_limited_function
@@ -46,14 +46,16 @@ def github_get_file(repo_url: str, file_path: str, commit_id: Optional[str] = No
 
 
 def is_balanced_parentheses(expression: str) -> bool:
-    parentheses_openers = ['(', '[']
-    parentheses_closers = [')', ']']
-    count = 0
+    parentheses_types = {'(': ')', '[': ']'}
+    parentheses_queue = list()
     for char in expression:
-        if char in parentheses_openers:
-            count += 1
-        elif char in parentheses_closers:
-            count -= 1
-        if count < 0:
+        if char not in list(parentheses_types.keys()) + list(parentheses_types.values()):
+            continue
+        if char in parentheses_types:
+            parentheses_queue.append(char)
+            continue
+
+        if not parentheses_queue or not char == parentheses_types[parentheses_queue[-1]]:
             return False
-    return count == 0
+        parentheses_queue.pop()
+    return not parentheses_queue
