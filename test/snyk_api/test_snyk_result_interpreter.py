@@ -1,4 +1,4 @@
-from src.snyk_result_interpreter import CodeLocation
+from snyk_api.snyk_result_interpreter import CodeLocation
 
 
 def test_code_location_equality():

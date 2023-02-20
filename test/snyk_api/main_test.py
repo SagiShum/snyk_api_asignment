@@ -1,5 +1,5 @@
 import pytest
-from src.macro_functions import is_snyk_output_of_commit
+from snyk_api import is_snyk_output_of_commit
 
 
 @pytest.fixture

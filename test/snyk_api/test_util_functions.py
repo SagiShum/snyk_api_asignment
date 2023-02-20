@@ -1,7 +1,7 @@
 import pytest
 from pytest import fixture
 
-from util_functions import github_get_file, is_balanced_parentheses, is_code_valid
+from snyk_api.util_functions import github_get_file, is_balanced_parentheses, is_code_valid
 
 
 @fixture

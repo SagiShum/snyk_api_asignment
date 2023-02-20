@@ -35,16 +35,3 @@ def is_balanced_parentheses(expression):
         if count < 0:
             return False
     return count == 0
-
-
-def is_code_valid(code: str) -> bool:
-    """
-    Runs simple code heuristics to validate marked code makes sense
-    :param code:
-    :return:
-    """
-    if len(code) == 0:
-        return False
-    if not is_balanced_parentheses(code):
-        return False
-    return True

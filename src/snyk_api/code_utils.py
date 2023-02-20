@@ -1,6 +1,6 @@
 import dataclasses
 
-from util_functions import is_balanced_parentheses
+from .util_functions import is_balanced_parentheses
 
 
 @dataclasses.dataclass(eq=True, frozen=True)
