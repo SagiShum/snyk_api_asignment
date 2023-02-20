@@ -16,14 +16,20 @@ class RunResult:
         self.locations = {CodeLocation.from_json(location_json) for location_json in result_json['locations']}
 
         for code_flow in result_json['codeFlows']:
-            for thread_flow in code_flow['threadFlows']:
-                flow_locations = []
-                for location_json in thread_flow['locations']:
-                    curr_location = CodeLocation.from_json(location_json['location'])
-                    if flow_locations and flow_locations[-1].is_contained(curr_location):
-                        flow_locations.pop()
-                    flow_locations.append(curr_location)
-                self.locations.update(flow_locations)
+            for thread_flow_json in code_flow['threadFlows']:
+                self.locations.update(self.thread_flow_json_to_locations(thread_flow_json))
+
+    def thread_flow_json_to_locations(self, thread_flow_json):
+        """
+        parses all code locations from a thread flow json. Merges locations contained by consecutive location.
+        """
+        flow_locations = []
+        for location_json in thread_flow_json['locations']:
+            curr_location = CodeLocation.from_json(location_json['location'])
+            if flow_locations and flow_locations[-1].is_contained(curr_location):
+                flow_locations.pop()
+            flow_locations.append(curr_location)
+        return flow_locations
 
 
 class SnykResultInterpreter:
@@ -50,6 +56,10 @@ class SnykResultInterpreter:
 
     @property
     def run_results(self):
+        """
+        Collection of all results in snyk report runs
+        :return:
+        """
         if not self._run_results:
             for run in self.snyk_json['runs']:
                 for result_json in run['results']:
