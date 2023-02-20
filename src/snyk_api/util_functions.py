@@ -1,4 +1,8 @@
 import time
+from numbers import Real
+from typing import Optional
+
+
 import github
 from functools import lru_cache
 
@@ -6,13 +10,13 @@ GIT_BASE_URL = 'https://github.com/'
 GITHUB_API = github.Github()
 
 
-def rate_limiter(min_interval):
+def rate_limiter(min_interval: Real):
     """
     Limits the interval between times the function can be called
     :param min_interval: seconds between function runs
     """
     def decorate(func):
-        last_run_time = [time.time()]
+        last_run_time = [time.time()]  # in a list to pass to inner function by reference and not value
 
         def rate_limited_function(*args, **kargs):
             left_to_wait = last_run_time[0] + min_interval - time.time()
@@ -28,7 +32,7 @@ def rate_limiter(min_interval):
 
 @lru_cache
 @rate_limiter(2)  # gihub api blocks requests if sent too frequent
-def github_get_file(repo_url: str, file_path: str, commit_id=None) -> str:
+def github_get_file(repo_url: str, file_path: str, commit_id: Optional[str] = None) -> str:
     commit_id = commit_id or github.GithubObject.NotSet
     repo = GITHUB_API.get_repo(repo_url.lstrip(GIT_BASE_URL))
     try:
@@ -41,7 +45,7 @@ def github_get_file(repo_url: str, file_path: str, commit_id=None) -> str:
         raise
 
 
-def is_balanced_parentheses(expression):
+def is_balanced_parentheses(expression: str) -> bool:
     parentheses_openers = ['(', '[']
     parentheses_closers = [')', ']']
     count = 0
