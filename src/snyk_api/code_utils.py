@@ -1,6 +1,8 @@
+from __future__ import annotations
 import dataclasses
 
-from .util_functions import is_balanced_parentheses
+from typing import Dict
+from snyk_api.util_functions import is_balanced_parentheses
 
 
 @dataclasses.dataclass(eq=True, frozen=True)
@@ -16,7 +18,7 @@ class CodeLocation:
     end_column: int
 
     @classmethod
-    def from_json(cls, location_json):
+    def from_json(cls, location_json: Dict) -> CodeLocation:
         return cls(
             uri=location_json['physicalLocation']['artifactLocation']['uri'],
             uri_base_id=location_json['physicalLocation']['artifactLocation']['uriBaseId'],
@@ -26,7 +28,7 @@ class CodeLocation:
             end_column=location_json['physicalLocation']['region']['endColumn'] - 1
         )
 
-    def is_contained(self, location) -> bool:
+    def is_contained(self, location: CodeLocation) -> bool:
         """
         :param location: other CodeLocation object
         :return: if other location starts at the same spot as self and is a larger code area

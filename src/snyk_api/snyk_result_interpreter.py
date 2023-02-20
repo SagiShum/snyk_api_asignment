@@ -1,9 +1,9 @@
 import json
 
-from typing import Dict, Set
+from typing import Dict, Set, List
 
 from snyk_api.code_utils import CodeLocation, code_location_to_code, is_code_valid
-from .util_functions import github_get_file
+from snyk_api.util_functions import github_get_file
 
 
 class RunResult:
@@ -19,7 +19,7 @@ class RunResult:
             for thread_flow_json in code_flow['threadFlows']:
                 self.locations.update(self.thread_flow_json_to_locations(thread_flow_json))
 
-    def thread_flow_json_to_locations(self, thread_flow_json):
+    def thread_flow_json_to_locations(self, thread_flow_json: Dict) -> List[CodeLocation]:
         """
         parses all code locations from a thread flow json. Merges locations contained by consecutive location.
         """
